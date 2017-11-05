@@ -17,4 +17,14 @@ public class MealWithExceed {
         this.calories = calories;
         this.exceed = exceed;
     }
+
+    @Override
+    public String toString() {
+        return "MealWithExceed{" +
+                "dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                ", exceed=" + exceed +
+                '}';
+    }
 }
