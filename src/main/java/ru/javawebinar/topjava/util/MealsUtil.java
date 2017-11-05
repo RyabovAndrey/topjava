@@ -19,13 +19,13 @@ public class MealsUtil {
                 new Meal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
                 new Meal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
         );
-        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
-//        .toLocalDate();
-//        .toLocalTime();
+        List<MealWithExceed> filteredWithExceeded = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        filteredWithExceeded.forEach(meal-> System.out.println(meal));
+
     }
 
     public static List<MealWithExceed>  getFilteredWithExceeded(List<Meal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with correctly exceeded field
-        return null;
+        mealList.stream().collect(Collectors.groupingBy(userMeal->userMeal.getDateTime().toLocalDate()))
+        return mealList;
     }
 }
