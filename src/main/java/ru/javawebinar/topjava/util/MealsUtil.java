@@ -25,6 +25,9 @@ public class MealsUtil {
         System.out.println();
         List<MealWithExceed> filteredWithExceededByCycle = getFilteredWithExceededByCycle(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         filteredWithExceededByCycle.forEach(System.out::println);
+        System.out.println();
+        List<MealWithExceed> filteredWithExceededByCycleLambda = getFilteredWithExceededByCycleLambda(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        filteredWithExceededByCycleLambda.forEach(System.out::println);
 
     }
 
@@ -48,12 +51,28 @@ public class MealsUtil {
         List<MealWithExceed> mealExceeded=new ArrayList<>();
         for (Meal meal: mealList) {
             if (TimeUtil.isBetween(meal.getTime(),startTime,endTime)) {
-                mealExceeded.add(new MealWithExceed(meal.getDateTime(),
-                        meal.getDescription(),meal.getCalories(),
-                        caloriesSumByDate.get(meal.getDate())>caloriesPerDay));
+                mealExceeded.add(createMealWithExceed(meal, caloriesSumByDate.get(meal.getDate())>caloriesPerDay));
             }
         }
 
         return mealExceeded;
+    }
+
+    public static List<MealWithExceed> getFilteredWithExceededByCycleLambda(List<Meal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        Map <LocalDate,Integer> caloriesSumByDate=new HashMap<>();
+        mealList.forEach(meal -> caloriesSumByDate.merge(meal.getDate(),meal.getCalories(),Integer::sum));
+
+        List<MealWithExceed> mealExceeded=new ArrayList<>();
+        mealList.forEach(meal -> {
+            if (TimeUtil.isBetween(meal.getTime(),startTime,endTime)) {
+                mealExceeded.add(createMealWithExceed(meal,caloriesSumByDate.get(meal.getDate())>caloriesPerDay));
+            }
+        });
+
+        return mealExceeded;
+    }
+
+    private static MealWithExceed createMealWithExceed(Meal meal, boolean exceeded) {
+        return new MealWithExceed(meal.getDateTime(),meal.getDescription(), meal.getCalories(),exceeded);
     }
 }
